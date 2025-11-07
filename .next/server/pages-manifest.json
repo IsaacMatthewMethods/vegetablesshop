@@ -1,7 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/[...slug]": "pages/[...slug].js",
-  "/api/register": "pages/api/register.js"
-}
+{"/_app":"pages/_app.js","/_error":"pages/_error.js","/_document":"pages/_document.js","/AboutPage":"pages/AboutPage.html","/AdminDashboardPage":"pages/AdminDashboardPage.html","/CartPage":"pages/CartPage.html","/ContactPage":"pages/ContactPage.html","/HomePage":"pages/HomePage.html","/LoginPage":"pages/LoginPage.html","/ProductPage":"pages/ProductPage.html","/RegistrationPage":"pages/RegistrationPage.html","/ShopPage":"pages/ShopPage.html","/UserDashboardPage":"pages/UserDashboardPage.html","/api/login":"pages/api/login.js","/[...slug]":"pages/[...slug].html","/api/register":"pages/api/register.js","/404":"pages/404.html"}

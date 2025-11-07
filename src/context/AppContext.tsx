@@ -9,11 +9,18 @@ interface AppContextType {
   setToken: (token: string | null) => void;
   products: Product[];
   cart: CartItem[];
+  orders: Order[];
   addToCart: (product: Product) => void;
   clearCart: () => void;
   placeOrder: (address: string, phone: string) => void;
   currentUser: User | null;
   logout: () => void;
+  updateOrderStatus: (orderId: string, status: 'pending' | 'approved' | 'delivered' | 'cancelled') => void;
+  updateProduct: (product: Product) => void;
+  addProduct: (product: Product) => void;
+  removeProduct: (productId: string) => void;
+  updateCartItemQuantity: (productId: string, quantity: number) => void;
+  removeFromCart: (productId: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -76,6 +83,40 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setToken(null);
   };
 
+  const updateOrderStatus = (orderId: string, status: 'pending' | 'approved' | 'delivered' | 'cancelled') => {
+    setOrders(prevOrders =>
+      prevOrders.map(order =>
+        order.id === orderId ? { ...order, status } : order
+      )
+    );
+  };
+
+  const updateProduct = (product: Product) => {
+    setProducts(prevProducts =>
+      prevProducts.map(p => (p.id === product.id ? product : p))
+    );
+  };
+
+  const addProduct = (product: Product) => {
+    setProducts(prevProducts => [...prevProducts, product]);
+  };
+
+  const removeProduct = (productId: string) => {
+    setProducts(prevProducts => prevProducts.filter(p => p.id !== productId));
+  };
+
+  const updateCartItemQuantity = (productId: string, quantity: number) => {
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.id === productId ? { ...item, quantity } : item
+      )
+    );
+  };
+
+  const removeFromCart = (productId: string) => {
+    setCart(prevCart => prevCart.filter(item => item.id !== productId));
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -83,11 +124,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         setToken,
         products,
         cart,
+        orders,
         addToCart,
         clearCart,
         placeOrder,
         currentUser,
         logout,
+        updateOrderStatus,
+        updateProduct,
+        addProduct,
+        removeProduct,
+        updateCartItemQuantity,
+        removeFromCart,
       }}
     >
       {children}

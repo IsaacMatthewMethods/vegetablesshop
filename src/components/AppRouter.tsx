@@ -15,7 +15,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import ClientOnly from './ClientOnly';
 
-const history = createBrowserHistory();
+const history: any = createBrowserHistory();
 
 const AppRouter = () => {
   return (
