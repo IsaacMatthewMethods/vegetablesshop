@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Package, Plus, Edit, Trash2 } from 'lucide-react';
-import OrderItem from '../components/OrderItem';
+import OrderItem from '../src/components/OrderItem';
 import { useAppContext } from '../context/AppContext';
 import { Product } from '../types';
 
