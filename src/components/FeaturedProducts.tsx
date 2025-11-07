@@ -5,12 +5,19 @@ import { useAppContext } from '../context/AppContext';
 
 const FeaturedProducts: React.FC = () => {
   const { products } = useAppContext();
-  
+
   // Get 4 random products to feature
   const featuredProducts = React.useMemo(() => {
+    if (!Array.isArray(products)) {
+      return [];
+    }
     const shuffled = [...products].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 4);
   }, [products]);
+
+  if (!products) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <section className="py-12 bg-gray-50">

@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST="{\"pages/_app.tsx -> ../src/components/AppRouter\":{\"id\":\"pages/_app.tsx -> ../src/components/AppRouter\",\"files\":[\"static/chunks/src_components_AppRouter_tsx.js\"]}}"
