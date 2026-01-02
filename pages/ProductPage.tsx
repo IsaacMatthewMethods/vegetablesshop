@@ -6,9 +6,13 @@ import { formatCurrency } from '../src/utils';
 
 const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const { products, addToCart, currency, exchangeRate } = useAppContext();
+  const { products, addToCart, currency, exchangeRate, isLoading } = useAppContext();
   const [quantity, setQuantity] = React.useState(1);
   
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+// ...
   const product = products.find(p => p.id === productId);
   
   if (!product) {

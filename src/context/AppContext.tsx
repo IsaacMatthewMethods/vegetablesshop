@@ -44,6 +44,8 @@ interface AppContextType {
 
   setCurrency: (currency: 'USD' | 'NGN') => void;
 
+  isLoading: boolean;
+
 }
 
 
@@ -82,11 +84,15 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const [exchangeRate, setExchangeRate] = useState(1500);
 
+  const [isLoading, setIsLoading] = useState(true);
+
 
 
   useEffect(() => {
 
     const fetchProducts = async () => {
+
+      setIsLoading(true);
 
       try {
 
@@ -103,6 +109,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
 
         console.error('Error fetching products:', error);
+
+      } finally {
+
+        setIsLoading(false);
 
       }
 
@@ -567,6 +577,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         exchangeRate,
 
         setCurrency,
+
+        isLoading,
 
       }}
 

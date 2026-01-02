@@ -3,86 +3,16 @@ import { useSearchParams } from 'react-router-dom';
 import ProductGrid from '../src/components/ProductGrid';
 import { useAppContext } from '../src/context/AppContext';
 import { Filter, Search } from 'lucide-react';
+import { formatCurrency } from '../src/utils';
 
 const ShopPage: React.FC = () => {
-  const { products } = useAppContext();
+  const { products, isLoading, currency, exchangeRate } = useAppContext();
   const [searchParams, setSearchParams] = useSearchParams();
   const [filteredProducts, setFilteredProducts] = useState(products);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10]);
-  const [showFilters, setShowFilters] = useState(false);
-
-  // Get unique categories
-  const categories = products ? [...new Set(products.map(product => product.category))] : [];
-
-  // Initialize from URL params
-  useEffect(() => {
-    if (products) {
-      const category = searchParams.get('category') || '';
-      setSelectedCategory(category);
-    }
-  }, [searchParams, products]);
-
-  // Filter products
-  useEffect(() => {
-    if (products) {
-      let result = [...products];
-      
-      // Filter by search term
-      if (searchTerm) {
-        result = result.filter(product => 
-          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }
-      
-      // Filter by category
-      if (selectedCategory) {
-        result = result.filter(product => product.category === selectedCategory);
-      }
-      
-      // Filter by price range
-      result = result.filter(product => 
-        product.price >= priceRange[0] && product.price <= priceRange[1]
-      );
-      
-      setFilteredProducts(result);
-    }
-  }, [products, searchTerm, selectedCategory, priceRange]);
-
-  // Update URL when category changes
-  useEffect(() => {
-    if (selectedCategory) {
-      setSearchParams({ category: selectedCategory });
-    } else {
-      setSearchParams({});
-    }
-  }, [selectedCategory, setSearchParams]);
-
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category === selectedCategory ? '' : category);
-  };
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const value = parseFloat(e.target.value);
-    setPriceRange(prev => {
-      const newRange = [...prev] as [number, number];
-      newRange[index] = value;
-      return newRange;
-    });
-  };
-
-  const clearFilters = () => {
-    setSearchTerm('');
-    setSelectedCategory('');
-    setPriceRange([0, 10]);
-  };
-
-  if (!products) {
+// ...
+  if (isLoading) {
     return <div>Loading...</div>;
-  }
-
+  } 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -146,8 +76,8 @@ const ShopPage: React.FC = () => {
               <h3 className="text-gray-700 font-medium mb-2">Price Range</h3>
               <div className="space-y-4">
                 <div className="flex justify-between">
-                  <span>${priceRange[0].toFixed(2)}</span>
-                  <span>${priceRange[1].toFixed(2)}</span>
+                  <span>{formatCurrency(priceRange[0], currency, exchangeRate)}</span>
+                  <span>{formatCurrency(priceRange[1], currency, exchangeRate)}</span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <input
