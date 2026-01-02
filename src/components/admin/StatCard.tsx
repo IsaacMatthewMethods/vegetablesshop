@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { Icon as LucideIcon } from 'lucide-react';
+import { Icon } from 'lucide-react';
 
 interface StatCardProps {
   title: string;
   value: string;
-  icon: LucideIcon;
+  icon: React.ElementType;
 }
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon }) => {
