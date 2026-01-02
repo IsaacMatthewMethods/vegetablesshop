@@ -1,9 +1,14 @@
 
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Home, ShoppingBag, Package, Users, BarChart } from 'lucide-react';
 
-const AdminLayout: React.FC = () => {
+const AdminLayout: React.FC = ({ children }) => {
+  const router = useRouter();
+
+  const isActive = (pathname: string) => router.pathname === pathname;
+  
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -14,58 +19,57 @@ const AdminLayout: React.FC = () => {
         <nav className="flex-grow p-4">
           <ul className="space-y-2">
             <li>
-              <NavLink 
-                to="/admin" 
-                end
-                className={({ isActive }) => 
-                  `flex items-center p-2 rounded-lg transition-colors ${isActive ? 'bg-green-700' : 'hover:bg-green-700'}`
-                }
+              <Link 
+                href="/admin" 
+                className={`flex items-center p-2 rounded-lg transition-colors ${
+                  isActive('/admin') ? 'bg-green-700' : 'hover:bg-green-700'
+                }`}
               >
                 <BarChart size={20} className="mr-3" />
                 Dashboard
-              </NavLink>
+              </Link>
             </li>
             <li>
-              <NavLink 
-                to="/admin/products"
-                className={({ isActive }) => 
-                  `flex items-center p-2 rounded-lg transition-colors ${isActive ? 'bg-green-700' : 'hover:bg-green-700'}`
-                }
+              <Link 
+                href="/admin/products"
+                className={`flex items-center p-2 rounded-lg transition-colors ${
+                  isActive('/admin/products') ? 'bg-green-700' : 'hover:bg-green-700'
+                }`}
               >
                 <Package size={20} className="mr-3" />
                 Products
-              </NavLink>
+              </Link>
             </li>
             <li>
-              <NavLink 
-                to="/admin/orders"
-                className={({ isActive }) => 
-                  `flex items-center p-2 rounded-lg transition-colors ${isActive ? 'bg-green-700' : 'hover:bg-green-700'}`
-                }
+              <Link 
+                href="/admin/orders"
+                className={`flex items-center p-2 rounded-lg transition-colors ${
+                  isActive('/admin/orders') ? 'bg-green-700' : 'hover:bg-green-700'
+                }`}
               >
                 <ShoppingBag size={20} className="mr-3" />
                 Orders
-              </NavLink>
+              </Link>
             </li>
             <li>
-              <NavLink 
-                to="/admin/users"
-                className={({ isActive }) => 
-                  `flex items-center p-2 rounded-lg transition-colors ${isActive ? 'bg-green-700' : 'hover:bg-green-700'}`
-                }
+              <Link 
+                href="/admin/users"
+                className={`flex items-center p-2 rounded-lg transition-colors ${
+                  isActive('/admin/users') ? 'bg-green-700' : 'hover:bg-green-700'
+                }`}
               >
                 <Users size={20} className="mr-3" />
                 Users
-              </NavLink>
+              </Link>
             </li>
             <li className="pt-4 mt-4 border-t border-green-700">
-              <NavLink 
-                to="/"
+              <Link 
+                href="/"
                 className="flex items-center p-2 rounded-lg transition-colors hover:bg-green-700"
               >
                 <Home size={20} className="mr-3" />
                 Back to Shop
-              </NavLink>
+              </Link>
             </li>
           </ul>
         </nav>
@@ -73,7 +77,7 @@ const AdminLayout: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-grow p-8 overflow-auto">
-        <Outlet />
+        {children}
       </main>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import ProductGrid from '../src/components/ProductGrid';
 import { useAppContext } from '../src/context/AppContext';
 import { Filter, Search } from 'lucide-react';
@@ -7,34 +7,101 @@ import { formatCurrency } from '../src/utils';
 
 const ShopPage: React.FC = () => {
   const { products, isLoading, currency, exchangeRate } = useAppContext();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const { q, category } = router.query;
+
+  const [showFilters, setShowFilters] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState(products);
-// ...
+
+  const [searchTerm, setSearchTerm] = useState((q as string) || '');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    (category as string) || null
+  );
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10]);
+
+  const categories = Array.from(new Set(products.map((p) => p.category)));
+
+  useEffect(() => {
+    let filtered = products;
+
+    if (searchTerm) {
+      filtered = filtered.filter((p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (selectedCategory) {
+      filtered = filtered.filter((p) => p.category === selectedCategory);
+    }
+
+    filtered = filtered.filter(
+      (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
+    );
+
+    setFilteredProducts(filtered);
+
+    const params = new URLSearchParams();
+    if (searchTerm) params.set('q', searchTerm);
+    if (selectedCategory) params.set('category', selectedCategory);
+    router.replace({
+      pathname: router.pathname,
+      query: params.toString(),
+    });
+  }, [searchTerm, selectedCategory, priceRange, products, router]);
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory((prev) => (prev === category ? null : category));
+  };
+
+  const handlePriceChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const newPriceRange = [...priceRange] as [number, number];
+    newPriceRange[index] = parseFloat(e.target.value);
+    if (newPriceRange[0] > newPriceRange[1]) {
+      newPriceRange.reverse();
+    }
+    setPriceRange(newPriceRange);
+  };
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSelectedCategory(null);
+    setPriceRange([0, 10]);
+  };
+  // ...
   if (isLoading) {
     return <div>Loading...</div>;
-  } 
+  }
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Shop Fresh Vegetables</h1>
-        <p className="text-gray-600">Browse our selection of fresh, organic vegetables</p>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          Shop Fresh Vegetables
+        </h1>
+        <p className="text-gray-600">
+          Browse our selection of fresh, organic vegetables
+        </p>
       </div>
-      
+
       <div className="flex flex-col md:flex-row gap-6">
         {/* Mobile filter toggle */}
-        <button 
+        <button
           className="md:hidden flex items-center justify-center bg-green-600 text-white px-4 py-2 rounded-lg mb-4"
           onClick={() => setShowFilters(!showFilters)}
         >
           <Filter size={18} className="mr-2" />
           {showFilters ? 'Hide Filters' : 'Show Filters'}
         </button>
-        
+
         {/* Filters sidebar */}
-        <div className={`md:w-1/4 ${showFilters ? 'block' : 'hidden md:block'}`}>
+        <div
+          className={`md:w-1/4 ${showFilters ? 'block' : 'hidden md:block'}`}
+        >
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h2 className="text-xl font-semibold mb-4">Filters</h2>
-            
+
             {/* Search */}
             <div className="mb-6">
               <label className="block text-gray-700 mb-2">Search</label>
@@ -46,15 +113,18 @@ const ShopPage: React.FC = () => {
                   placeholder="Search products..."
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
-                <Search size={18} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Search
+                  size={18}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                />
               </div>
             </div>
-            
+
             {/* Categories */}
             <div className="mb-6">
               <h3 className="text-gray-700 font-medium mb-2">Categories</h3>
               <div className="space-y-2">
-                {categories.map(category => (
+                {categories.map((category) => (
                   <div key={category} className="flex items-center">
                     <input
                       type="checkbox"
@@ -63,21 +133,28 @@ const ShopPage: React.FC = () => {
                       onChange={() => handleCategoryChange(category)}
                       className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                     />
-                    <label htmlFor={category} className="ml-2 text-gray-700 capitalize">
+                    <label
+                      htmlFor={category}
+                      className="ml-2 text-gray-700 capitalize"
+                    >
                       {category}
                     </label>
                   </div>
                 ))}
               </div>
             </div>
-            
+
             {/* Price Range */}
             <div className="mb-6">
               <h3 className="text-gray-700 font-medium mb-2">Price Range</h3>
               <div className="space-y-4">
                 <div className="flex justify-between">
-                  <span>{formatCurrency(priceRange[0], currency, exchangeRate)}</span>
-                  <span>{formatCurrency(priceRange[1], currency, exchangeRate)}</span>
+                  <span>
+                    {formatCurrency(priceRange[0], currency, exchangeRate)}
+                  </span>
+                  <span>
+                    {formatCurrency(priceRange[1], currency, exchangeRate)}
+                  </span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <input
@@ -101,7 +178,7 @@ const ShopPage: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Clear Filters */}
             <button
               onClick={clearFilters}
@@ -111,17 +188,21 @@ const ShopPage: React.FC = () => {
             </button>
           </div>
         </div>
-        
+
         {/* Products */}
         <div className="md:w-3/4">
           {filteredProducts.length === 0 ? (
             <div className="bg-white p-8 rounded-lg shadow-sm text-center">
               <h3 className="text-xl font-semibold mb-2">No products found</h3>
-              <p className="text-gray-600">Try adjusting your filters or search term</p>
+              <p className="text-gray-600">
+                Try adjusting your filters or search term
+              </p>
             </div>
           ) : (
             <>
-              <p className="mb-4 text-gray-600">{filteredProducts.length} products found</p>
+              <p className="mb-4 text-gray-600">
+                {filteredProducts.length} products found
+              </p>
               <ProductGrid products={filteredProducts} />
             </>
           )}

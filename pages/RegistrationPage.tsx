@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 const RegistrationPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ const RegistrationPage = () => {
         throw new Error(message);
       }
 
-      navigate('/login');
+      router.push('/login');
     } catch (error: any) {
       setError(error.message);
     }

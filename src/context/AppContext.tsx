@@ -303,6 +303,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           const newOrder = await response.json();
 
           setOrders(prevOrders => [...prevOrders, newOrder]);
+          if (currentUser) {
+            setCurrentUser(prevUser => ({
+              ...prevUser!,
+              orders: [...prevUser!.orders, newOrder],
+            }));
+          }
 
           setCart([]);
 

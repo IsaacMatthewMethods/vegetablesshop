@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ShoppingBag, ArrowRight, Trash2 } from 'lucide-react';
 import CartItem from '../src/components/CartItem';
 import { useAppContext } from '../src/context/AppContext';
@@ -38,9 +38,8 @@ const CartPage: React.FC = () => {
             You can track your order in your dashboard.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link 
-              to="/dashboard" 
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center justify-center transition-colors"
+                        <Link
+                          href="/dashboard"              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center justify-center transition-colors"
             >
               View Your Orders
               <ArrowRight size={18} className="ml-2" />
@@ -69,8 +68,8 @@ const CartPage: React.FC = () => {
             Looks like you haven't added any vegetables to your cart yet.
             Browse our selection of fresh vegetables and start shopping!
           </p>
-          <Link 
-            to="/shop" 
+          <Link
+            href="/shop" 
             className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg inline-flex items-center transition-colors"
           >
             Start Shopping
@@ -188,7 +187,7 @@ const CartPage: React.FC = () => {
                   <ArrowRight size={18} className="ml-2" />
                 </button>
                 <Link 
-                  to="/shop" 
+                  href="/shop" 
                   className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg flex items-center justify-center transition-colors"
                 >
                   Continue Shopping

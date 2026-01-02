@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShoppingCart, Info } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Product } from '../types';
 import { useAppContext } from '../context/AppContext';
 import { formatCurrency } from '../utils';
@@ -35,8 +35,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <ShoppingCart size={16} className="mr-1" />
             Add to Cart
           </button>
-          <Link 
-            to={`/product/${product.id}`}
+          <Link
+            href={`/product/${product.id}`}
             className="bg-gray-200 text-gray-700 px-3 py-2 rounded-md flex items-center hover:bg-gray-300 transition-colors"
           >
             <Info size={16} className="mr-1" />

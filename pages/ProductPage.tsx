@@ -1,11 +1,13 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { ShoppingCart, ArrowLeft, Truck, ShieldCheck } from 'lucide-react';
 import { useAppContext } from '../src/context/AppContext';
 import { formatCurrency } from '../src/utils';
 
 const ProductPage: React.FC = () => {
-  const { productId } = useParams<{ productId: string }>();
+  const router = useRouter();
+  const { productId } = router.query;
   const { products, addToCart, currency, exchangeRate, isLoading } = useAppContext();
   const [quantity, setQuantity] = React.useState(1);
   
@@ -20,7 +22,7 @@ const ProductPage: React.FC = () => {
       <div className="container mx-auto px-4 py-16 text-center">
         <h2 className="text-2xl font-bold mb-4">Product Not Found</h2>
         <p className="mb-6">The product you're looking for doesn't exist or has been removed.</p>
-        <Link to="/shop" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+        <Link href="/shop" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
           Back to Shop
         </Link>
       </div>
@@ -40,7 +42,7 @@ const ProductPage: React.FC = () => {
   
   return (
     <div className="container mx-auto px-4 py-8">
-      <Link to="/shop" className="inline-flex items-center text-green-600 hover:text-green-700 mb-6">
+      <Link href="/shop" className="inline-flex items-center text-green-600 hover:text-green-700 mb-6">
         <ArrowLeft size={16} className="mr-1" />
         Back to Shop
       </Link>
@@ -113,7 +115,7 @@ const ProductPage: React.FC = () => {
                 Add to Cart
               </button>
               <Link 
-                to="/cart" 
+                href="/cart" 
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg flex items-center justify-center transition-colors"
               >
                 View Cart
@@ -139,7 +141,7 @@ const ProductPage: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {relatedProducts.map(relatedProduct => (
               <div key={relatedProduct.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <Link to={`/product/${relatedProduct.id}`}>
+                <Link href={`/product/${relatedProduct.id}`}>
                   <img 
                     src={relatedProduct.image} 
                     alt={relatedProduct.name} 
@@ -147,7 +149,7 @@ const ProductPage: React.FC = () => {
                   />
                 </Link>
                 <div className="p-4">
-                  <Link to={`/product/${relatedProduct.id}`} className="text-lg font-semibold text-gray-800 hover:text-green-600">
+                  <Link href={`/product/${relatedProduct.id}`} className="text-lg font-semibold text-gray-800 hover:text-green-600">
                     {relatedProduct.name}
                   </Link>
                   <p className="text-green-600 font-bold mt-1">{formatCurrency(relatedProduct.price, currency, exchangeRate)} / {relatedProduct.unit}</p>

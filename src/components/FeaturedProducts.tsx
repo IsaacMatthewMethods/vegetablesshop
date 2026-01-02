@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import ProductGrid from './ProductGrid';
 import { useAppContext } from '../context/AppContext';
 
@@ -30,8 +30,8 @@ const FeaturedProducts: React.FC = () => {
         <ProductGrid products={featuredProducts} />
         
         <div className="text-center mt-10">
-          <Link 
-            to="/shop" 
+          <Link
+            href="/shop" 
             className="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
           >
             View All Products

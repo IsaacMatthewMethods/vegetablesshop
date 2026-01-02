@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ShoppingBag, User, LogOut, Package } from 'lucide-react';
 import OrderItem from '../src/components/OrderItem';
 import { useAppContext } from '../src/context/AppContext';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
 
 const Hero: React.FC = () => {
@@ -23,15 +23,15 @@ const Hero: React.FC = () => {
             From farm to table, we ensure quality and freshness in every delivery.
           </p>
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-            <Link 
-              to="/shop" 
+            <Link
+              href="/shop" 
               className="bg-yellow-500 hover:bg-yellow-600 text-green-900 font-bold py-3 px-6 rounded-lg flex items-center justify-center transition-colors"
             >
               <ShoppingBag size={20} className="mr-2" />
               Shop Now
             </Link>
-            <Link 
-              to="/about" 
+            <Link
+              href="/about" 
               className="bg-transparent hover:bg-green-600 border-2 border-white py-3 px-6 rounded-lg flex items-center justify-center transition-colors"
             >
               Learn More

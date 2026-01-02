@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useAppContext } from '../src/context/AppContext';
 
 const LoginPage = () => {
@@ -7,7 +8,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +30,7 @@ const LoginPage = () => {
 
       const { token } = await response.json();
       setToken(token);
-      navigate('/');
+      router.push('/');
     } catch (error: any) {
       setError(error.message);
     }
@@ -65,7 +66,7 @@ const LoginPage = () => {
         </button>
         <p className="mt-4 text-center">
           Don't have an account?{' '}
-          <Link to="/register" className="text-blue-500">
+          <Link href="/register" className="text-blue-500">
             Register
           </Link>
         </p>
