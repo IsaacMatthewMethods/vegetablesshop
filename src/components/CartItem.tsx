@@ -2,13 +2,14 @@ import React from 'react';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { CartItem as CartItemType } from '../types';
 import { useAppContext } from '../context/AppContext';
+import { formatCurrency } from '../utils';
 
 interface CartItemProps {
   item: CartItemType;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item }) => {
-  const { updateCartItemQuantity, removeFromCart } = useAppContext();
+  const { updateCartItemQuantity, removeFromCart, currency, exchangeRate } = useAppContext();
 
   return (
     <div className="flex items-center py-4 border-b border-gray-200">
@@ -22,7 +23,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
       
       <div className="ml-4 flex-grow">
         <h3 className="text-lg font-medium text-gray-800">{item.name}</h3>
-        <p className="text-gray-600">${item.price.toFixed(2)} / {item.unit}</p>
+        <p className="text-gray-600">{formatCurrency(item.price, currency, exchangeRate)} / {item.unit}</p>
       </div>
       
       <div className="flex items-center">
@@ -44,7 +45,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
       </div>
       
       <div className="ml-6 text-right">
-        <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+        <p className="font-semibold">{formatCurrency(item.price * item.quantity, currency, exchangeRate)}</p>
         <button 
           onClick={() => removeFromCart(item.id)}
           className="text-red-500 hover:text-red-700 transition-colors mt-1"

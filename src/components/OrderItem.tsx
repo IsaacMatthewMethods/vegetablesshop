@@ -1,6 +1,8 @@
 import React from 'react';
 import { Order } from '../types';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import { formatCurrency } from '../utils';
 
 interface OrderItemProps {
   order: Order;
@@ -10,6 +12,7 @@ interface OrderItemProps {
 
 const OrderItem: React.FC<OrderItemProps> = ({ order, isAdmin = false, onUpdateStatus }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const { currency, exchangeRate } = useAppContext();
 
   const getStatusColor = (status: Order['status']) => {
     switch (status) {
@@ -68,7 +71,7 @@ const OrderItem: React.FC<OrderItemProps> = ({ order, isAdmin = false, onUpdateS
                     />
                     <span>{item.name} x {item.quantity}</span>
                   </div>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  <span>{formatCurrency(item.price * item.quantity, currency, exchangeRate)}</span>
                 </div>
               ))}
             </div>
@@ -76,7 +79,7 @@ const OrderItem: React.FC<OrderItemProps> = ({ order, isAdmin = false, onUpdateS
           
           <div className="flex justify-between items-center font-medium text-lg border-t border-gray-200 pt-3">
             <span>Total:</span>
-            <span>${order.total.toFixed(2)}</span>
+            <span>{formatCurrency(order.total, currency, exchangeRate)}</span>
           </div>
           
           {isAdmin && onUpdateStatus && (

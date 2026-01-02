@@ -11,9 +11,9 @@ const App = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <AppProvider>
-        <main className="flex-grow">
+        <div className="flex-grow">
           <AppRouter />
-        </main>
+        </div>
       </AppProvider>
     </div>
   );

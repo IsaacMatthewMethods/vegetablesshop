@@ -3,13 +3,14 @@ import { ShoppingCart, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types';
 import { useAppContext } from '../context/AppContext';
+import { formatCurrency } from '../utils';
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addToCart } = useAppContext();
+  const { addToCart, currency, exchangeRate } = useAppContext();
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
@@ -23,7 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
         <div className="flex justify-between items-center mt-2">
-          <p className="text-green-600 font-bold">${product.price.toFixed(2)} / {product.unit}</p>
+          <p className="text-green-600 font-bold">{formatCurrency(product.price, currency, exchangeRate)} / {product.unit}</p>
           <p className="text-sm text-gray-500">{product.stock} in stock</p>
         </div>
         <div className="mt-4 flex justify-between">

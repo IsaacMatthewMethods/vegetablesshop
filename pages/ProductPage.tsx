@@ -2,10 +2,11 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ShoppingCart, ArrowLeft, Truck, ShieldCheck } from 'lucide-react';
 import { useAppContext } from '../src/context/AppContext';
+import { formatCurrency } from '../src/utils';
 
 const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const { products, addToCart } = useAppContext();
+  const { products, addToCart, currency, exchangeRate } = useAppContext();
   const [quantity, setQuantity] = React.useState(1);
   
   const product = products.find(p => p.id === productId);
@@ -56,7 +57,7 @@ const ProductPage: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-800 mb-2">{product.name}</h1>
             
             <div className="flex items-center mb-4">
-              <span className="text-2xl font-bold text-green-600">${product.price.toFixed(2)}</span>
+              <span className="text-2xl font-bold text-green-600">{formatCurrency(product.price, currency, exchangeRate)}</span>
               <span className="ml-2 text-gray-600">/ {product.unit}</span>
             </div>
             
@@ -65,7 +66,7 @@ const ProductPage: React.FC = () => {
             <div className="mb-6">
               <div className="flex items-center text-sm text-gray-600 mb-2">
                 <Truck size={16} className="mr-2 text-green-600" />
-                <span>Free delivery on orders over $50</span>
+                <span>Free delivery on orders over {formatCurrency(50, currency, exchangeRate)}</span>
               </div>
               <div className="flex items-center text-sm text-gray-600">
                 <ShieldCheck size={16} className="mr-2 text-green-600" />
@@ -145,7 +146,7 @@ const ProductPage: React.FC = () => {
                   <Link to={`/product/${relatedProduct.id}`} className="text-lg font-semibold text-gray-800 hover:text-green-600">
                     {relatedProduct.name}
                   </Link>
-                  <p className="text-green-600 font-bold mt-1">${relatedProduct.price.toFixed(2)} / {relatedProduct.unit}</p>
+                  <p className="text-green-600 font-bold mt-1">{formatCurrency(relatedProduct.price, currency, exchangeRate)} / {relatedProduct.unit}</p>
                 </div>
               </div>
             ))}

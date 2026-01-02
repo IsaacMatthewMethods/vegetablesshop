@@ -4,7 +4,7 @@ import { ShoppingCart, User, Menu, X } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 const Navbar: React.FC = () => {
-  const { cart, currentUser } = useAppContext();
+  const { cart, currentUser, currency, setCurrency } = useAppContext();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -37,6 +37,21 @@ const Navbar: React.FC = () => {
             )}
             
             <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-1 bg-green-700 p-1 rounded-full">
+                <button
+                  onClick={() => setCurrency('USD')}
+                  className={`px-2 py-1 text-xs rounded-full ${currency === 'USD' ? 'bg-yellow-400 text-green-800' : 'hover:bg-green-500'}`}
+                >
+                  USD
+                </button>
+                <button
+                  onClick={() => setCurrency('NGN')}
+                  className={`px-2 py-1 text-xs rounded-full ${currency === 'NGN' ? 'bg-yellow-400 text-green-800' : 'hover:bg-green-500'}`}
+                >
+                  NGN
+                </button>
+              </div>
+
               <Link to="/cart" className="relative">
                 <ShoppingCart size={24} />
                 {totalItems > 0 && (
@@ -66,7 +81,21 @@ const Navbar: React.FC = () => {
                 <Link to="/admin" className="hover:text-yellow-200 transition-colors" onClick={() => setIsMenuOpen(false)}>Admin</Link>
               )}
               
-              <div className="flex items-center space-x-4 pt-2">
+              <div className="flex items-center space-x-4 pt-4">
+                  <div className="flex items-center space-x-1 bg-green-700 p-1 rounded-full">
+                    <button
+                      onClick={() => { setCurrency('USD'); setIsMenuOpen(false); }}
+                      className={`px-2 py-1 text-xs rounded-full ${currency === 'USD' ? 'bg-yellow-400 text-green-800' : 'hover:bg-green-500'}`}
+                    >
+                      USD
+                    </button>
+                    <button
+                      onClick={() => { setCurrency('NGN'); setIsMenuOpen(false); }}
+                      className={`px-2 py-1 text-xs rounded-full ${currency === 'NGN' ? 'bg-yellow-400 text-green-800' : 'hover:bg-green-500'}`}
+                    >
+                      NGN
+                    </button>
+                  </div>
                 <Link to="/cart" className="relative" onClick={() => setIsMenuOpen(false)}>
                   <ShoppingCart size={24} />
                   {totalItems > 0 && (

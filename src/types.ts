@@ -5,6 +5,7 @@ export interface Product {
   image: string;
   description: string;
   category: string;
+  category_id?: number;
   stock: number;
   unit: string;
 }
@@ -30,4 +31,5 @@ export interface User {
   email: string;
   role: 'user' | 'admin';
   orders: Order[];
+  created_at?: string;
 }

@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { ShoppingBag, ArrowRight, Trash2 } from 'lucide-react';
 import CartItem from '../src/components/CartItem';
 import { useAppContext } from '../src/context/AppContext';
+import { formatCurrency } from '../src/utils';
 
 const CartPage: React.FC = () => {
-  const { cart, clearCart, placeOrder, currentUser } = useAppContext();
+  const { cart, clearCart, placeOrder, currentUser, currency, exchangeRate } = useAppContext();
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
@@ -115,20 +116,20 @@ const CartPage: React.FC = () => {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">
                 <span className="text-gray-600">Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatCurrency(subtotal, currency, exchangeRate)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Shipping</span>
-                <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                <span>{shipping === 0 ? 'Free' : formatCurrency(shipping, currency, exchangeRate)}</span>
               </div>
               <div className="border-t border-gray-200 pt-3 mt-3">
                 <div className="flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{formatCurrency(total, currency, exchangeRate)}</span>
                 </div>
                 {subtotal < 50 && (
                   <p className="text-sm text-gray-500 mt-2">
-                    Add ${(50 - subtotal).toFixed(2)} more to qualify for free shipping
+                    Add {formatCurrency(50 - subtotal, currency, exchangeRate)} more to qualify for free shipping
                   </p>
                 )}
               </div>
