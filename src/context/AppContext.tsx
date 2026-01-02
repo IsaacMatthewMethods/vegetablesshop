@@ -26,24 +26,74 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setTokenState] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('token');
+    }
+    return null;
+  });
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<User[]>(initialUsers);
-  const [orders, setOrders] = useState<Order[]>(initialOrders);
+  const [users, setUsers] = useState<User[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  const setToken = (newToken: string | null) => {
+    setTokenState(newToken);
+    if (typeof window !== 'undefined') {
+      if (newToken) {
+        localStorage.setItem('token', newToken);
+      } else {
+        localStorage.removeItem('token');
+      }
+    }
+  };
 
   useEffect(() => {
-    if (token) {
-      // In a real app, you would fetch the user data from an API
-      const user = users.find(u => u.id === 'user1'); // Mocking a logged in user
-      if (user) {
-        setCurrentUser({ ...user, orders: orders.filter(o => o.userId === user.id) });
+    const fetchUserAndOrders = async () => {
+      if (token) {
+        try {
+          // Fetch user data
+          const userResponse = await fetch('/api/me', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+
+          if (userResponse.ok) {
+            const userData = await userResponse.json();
+            
+            // Fetch orders data
+            const ordersResponse = await fetch('/api/my-orders', {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (ordersResponse.ok) {
+              const ordersData = await ordersResponse.json();
+              setOrders(ordersData);
+              setCurrentUser({ ...userData, orders: ordersData });
+            } else {
+              // Handle orders fetch error
+              setOrders([]);
+              setCurrentUser({ ...userData, orders: [] });
+            }
+          } else {
+            // Handle invalid token case
+            setToken(null);
+            setCurrentUser(null);
+            setOrders([]);
+          }
+        } catch (error) {
+          console.error('Error fetching user or orders:', error);
+          setToken(null);
+          setCurrentUser(null);
+          setOrders([]);
+        }
+      } else {
+        setCurrentUser(null);
+        setOrders([]);
       }
-    } else {
-      setCurrentUser(null);
-    }
-  }, [token, users, orders]);
+    };
+    fetchUserAndOrders();
+  }, [token]);
 
   const addToCart = (product: Product) => {
     setCart(prevCart => {
