@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Home, ShoppingBag, Package, Users, BarChart } from 'lucide-react';
 
-const AdminLayout: React.FC = ({ children }) => {
+const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
 
   const isActive = (pathname: string) => router.pathname === pathname;
