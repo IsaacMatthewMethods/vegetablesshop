@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import pool from '../../../src/db';
 import { Product } from '../../../src/types';
 import { products as initialProducts } from '../../../src/data/products';
+import { RowDataPacket } from 'mysql2';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -10,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Seeding logic removed from GET request.
       // Ensure your database is seeded separately, e.g., by running sql3813285.sql once.
 
-      const [products] = await pool.query(`
+      const [products] = await pool.query<RowDataPacket[]>(`
         SELECT p.*, c.name as category 
         FROM products p 
         LEFT JOIN categories c ON p.category_id = c.id
