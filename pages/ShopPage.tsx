@@ -43,10 +43,13 @@ const ShopPage: React.FC = () => {
     const params = new URLSearchParams();
     if (searchTerm) params.set('q', searchTerm);
     if (selectedCategory) params.set('category', selectedCategory);
-    router.replace({
-      pathname: router.pathname,
-      query: params.toString(),
-    });
+    const newQueryString = params.toString();
+    if (newQueryString !== router.asPath.split('?')[1]) {
+      router.replace({
+        pathname: router.pathname,
+        query: newQueryString,
+      });
+    }
   }, [searchTerm, selectedCategory, priceRange, products, router]);
 
   const handleCategoryChange = (category: string) => {

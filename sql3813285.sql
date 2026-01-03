@@ -33,6 +33,20 @@ INSERT IGNORE INTO `categories` (`name`) VALUES
 ('leafy');
 
 --
+-- Dumping data for table `products`
+--
+
+INSERT IGNORE INTO `products` (`name`, `description`, `price`, `image`, `category_id`, `stock`, `unit`) VALUES
+('Fresh Carrots', 'Organic, locally grown carrots. Rich in vitamins and fiber.', 1.99, 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37', 1, 50, 'bunch'),
+('Broccoli', 'Fresh green broccoli florets, perfect for stir-fries and salads.', 2.49, 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc', 2, 30, 'head'),
+('Tomatoes', 'Ripe, juicy tomatoes. Great for salads, sauces, and sandwiches.', 3.99, 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea', 3, 40, 'lb'),
+('Spinach', 'Nutrient-rich spinach leaves, perfect for salads and cooking.', 2.99, 'https://images.unsplash.com/photo-1576045057995-568f588f82fb', 4, 25, 'bunch'),
+('Bell Peppers', 'Colorful bell peppers, sweet and crunchy.', 1.79, 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83', 3, 35, 'each'),
+('Cucumber', 'Cool and refreshing cucumbers, perfect for salads.', 1.29, 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e', 3, 45, 'each'),
+('Potatoes', 'Versatile potatoes, great for roasting, mashing, or frying.', 4.99, 'https://images.unsplash.com/photo-1518977676601-b53f82aba655', 1, 60, 'bag'),
+('Onions', 'Essential cooking ingredient, adds flavor to any dish.', 1.49, 'https://images.unsplash.com/photo-1620574387735-3624d75b2dbc', 1, 70, 'lb');
+
+--
 -- Table structure for table `products`
 --
 
@@ -46,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `stock` INT NOT NULL DEFAULT 0,
   `unit` VARCHAR(50),
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (`name`(191)),
   FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
