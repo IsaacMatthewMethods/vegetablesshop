@@ -16,7 +16,7 @@ const UserDashboardPage: React.FC = () => {
             You need to be logged in to view your dashboard.
           </p>
           <Link 
-            to="/login" 
+            href="/login" 
             className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg inline-flex items-center transition-colors"
           >
             Go to Login
@@ -44,14 +44,14 @@ const UserDashboardPage: React.FC = () => {
             
             <nav className="space-y-2">
               <Link 
-                to="/dashboard" 
+                href="/dashboard" 
                 className="flex items-center px-4 py-2 bg-green-50 text-green-700 rounded-lg"
               >
                 <Package size={18} className="mr-2" />
                 My Orders
               </Link>
               <Link 
-                to="/shop" 
+                href="/shop" 
                 className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg"
               >
                 <ShoppingBag size={18} className="mr-2" />
@@ -83,7 +83,7 @@ const UserDashboardPage: React.FC = () => {
                   You haven't placed any orders yet. Start shopping to place your first order!
                 </p>
                 <Link 
-                  to="/shop" 
+                  href="/shop" 
                   className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg inline-flex items-center transition-colors"
                 >
                   Browse Products

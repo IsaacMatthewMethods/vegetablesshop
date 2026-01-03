@@ -32,16 +32,16 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-300 hover:text-yellow-300 transition-colors">Home</Link>
+                <Link href="/" className="text-gray-300 hover:text-yellow-300 transition-colors">Home</Link>
               </li>
               <li>
-                <Link to="/shop" className="text-gray-300 hover:text-yellow-300 transition-colors">Shop</Link>
+                <Link href="/shop" className="text-gray-300 hover:text-yellow-300 transition-colors">Shop</Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-300 hover:text-yellow-300 transition-colors">About Us</Link>
+                <Link href="/about" className="text-gray-300 hover:text-yellow-300 transition-colors">About Us</Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-300 hover:text-yellow-300 transition-colors">Contact</Link>
+                <Link href="/contact" className="text-gray-300 hover:text-yellow-300 transition-colors">Contact</Link>
               </li>
             </ul>
           </div>
@@ -51,16 +51,16 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Categories</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/shop?category=root" className="text-gray-300 hover:text-yellow-300 transition-colors">Root Vegetables</Link>
+                <Link href="/shop?category=root" className="text-gray-300 hover:text-yellow-300 transition-colors">Root Vegetables</Link>
               </li>
               <li>
-                <Link to="/shop?category=leafy" className="text-gray-300 hover:text-yellow-300 transition-colors">Leafy Greens</Link>
+                <Link href="/shop?category=leafy" className="text-gray-300 hover:text-yellow-300 transition-colors">Leafy Greens</Link>
               </li>
               <li>
-                <Link to="/shop?category=fruit" className="text-gray-300 hover:text-yellow-300 transition-colors">Fruit Vegetables</Link>
+                <Link href="/shop?category=fruit" className="text-gray-300 hover:text-yellow-300 transition-colors">Fruit Vegetables</Link>
               </li>
               <li>
-                <Link to="/shop?category=cruciferous" className="text-gray-300 hover:text-yellow-300 transition-colors">Cruciferous</Link>
+                <Link href="/shop?category=cruciferous" className="text-gray-300 hover:text-yellow-300 transition-colors">Cruciferous</Link>
               </li>
             </ul>
           </div>

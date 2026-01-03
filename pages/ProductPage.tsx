@@ -7,7 +7,7 @@ import { formatCurrency } from '../src/utils';
 
 const ProductPage: React.FC = () => {
   const router = useRouter();
-  const { productId } = router.query;
+  const { id } = router.query;
   const { products, addToCart, currency, exchangeRate, isLoading } = useAppContext();
   const [quantity, setQuantity] = React.useState(1);
   
@@ -15,7 +15,7 @@ const ProductPage: React.FC = () => {
     return <div>Loading...</div>;
   }
 // ...
-  const product = products.find(p => p.id === productId);
+  const product = products.find(p => p.id === id);
   
   if (!product) {
     return (

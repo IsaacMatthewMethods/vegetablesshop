@@ -45,7 +45,7 @@ const CartPage: React.FC = () => {
               <ArrowRight size={18} className="ml-2" />
             </Link>
             <Link 
-              to="/shop" 
+              href="/shop" 
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg flex items-center justify-center transition-colors"
             >
               Continue Shopping

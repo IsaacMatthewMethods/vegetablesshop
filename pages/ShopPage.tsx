@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import ProductGrid from '../src/components/ProductGrid';
 import { useAppContext } from '../src/context/AppContext';
 import { Filter, Search } from 'lucide-react';
-import { formatCurrency } from '../src/utils';
+import { formatCurrency, debounce } from '../src/utils';
 
 const ShopPage: React.FC = () => {
   const { products, isLoading, currency, exchangeRate } = useAppContext();
@@ -13,44 +13,116 @@ const ShopPage: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState(products);
 
-  const [searchTerm, setSearchTerm] = useState((q as string) || '');
+  const [searchTerm, setSearchTermState] = useState((q as string) || '');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     (category as string) || null
   );
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10]);
+  const [priceRangeState, setPriceRangeState] = useState<[number, number]>([0, 100]);
+  const [maxProductPrice, setMaxProductPrice] = useState(100);
 
   const categories = Array.from(new Set(products.map((p) => p.category)));
 
+  // Debounced setters
+  const debouncedSetSearchTerm = React.useCallback(
+    debounce((value: string) => setSearchTermState(value), 300),
+    []
+  );
+
+  const debouncedSetPriceRange = React.useCallback(
+    debounce((newRange: [number, number]) => setPriceRangeState(newRange), 300),
+    []
+  );
+  // ... other code ...
+
+  // Effect to set initial price range and max product price
   useEffect(() => {
-    let filtered = products;
+    if (products.length > 0) {
+      const prices = products.map(p => p.price);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      setMaxProductPrice(maxPrice);
+      // Only set initial priceRange if it's still at default or invalid
+      if (priceRangeState[0] === 0 && priceRangeState[1] === 100) { // Check if default initial values
+        setPriceRangeState([minPrice, maxPrice]);
+      } else {
+        // Ensure current range is within new max/min bounds
+        setPriceRangeState(prev => [
+          Math.max(minPrice, Math.min(prev[0], maxPrice)),
+          Math.max(minPrice, Math.min(prev[1], maxPrice)),
+        ]);
+      }
+    }
+  }, [products]); // Recalculate when products change
 
-    if (searchTerm) {
-      filtered = filtered.filter((p) =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+    useEffect(() => {
+
+      let filtered = products;
+
+  
+
+          if (searchTerm) {
+
+  
+
+            filtered = filtered.filter((p) =>
+
+  
+
+              p.name.toLowerCase().includes(searchTerm.toLowerCase())
+
+  
+
+            );
+
+  
+
+          }
+
+  
+
+      if (selectedCategory) {
+
+        filtered = filtered.filter((p) => p.category === selectedCategory);
+
+      }
+
+  
+
+      filtered = filtered.filter(
+
+        (p) => p.price >= priceRangeState[0] && p.price <= priceRangeState[1]
+
       );
-    }
 
-    if (selectedCategory) {
-      filtered = filtered.filter((p) => p.category === selectedCategory);
-    }
+  
 
-    filtered = filtered.filter(
-      (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
-    );
+      setFilteredProducts(filtered);
 
-    setFilteredProducts(filtered);
+  
 
-    const params = new URLSearchParams();
-    if (searchTerm) params.set('q', searchTerm);
-    if (selectedCategory) params.set('category', selectedCategory);
-    const newQueryString = params.toString();
-    if (newQueryString !== router.asPath.split('?')[1]) {
-      router.replace({
-        pathname: router.pathname,
-        query: newQueryString,
-      });
-    }
-  }, [searchTerm, selectedCategory, priceRange, products, router]);
+      const params = new URLSearchParams();
+
+      if (searchTerm) params.set('q', searchTerm);
+
+      if (selectedCategory) params.set('category', selectedCategory);
+
+      
+
+      const newQueryString = params.toString();
+
+      if (newQueryString !== router.asPath.split('?')[1]) {
+
+        router.replace({
+
+          pathname: router.pathname,
+
+          query: newQueryString,
+
+        });
+
+      }
+
+    }, [searchTerm, selectedCategory, priceRangeState, products]);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory((prev) => (prev === category ? null : category));
@@ -60,18 +132,24 @@ const ShopPage: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => {
-    const newPriceRange = [...priceRange] as [number, number];
+    const newPriceRange = [...priceRangeState] as [number, number];
     newPriceRange[index] = parseFloat(e.target.value);
     if (newPriceRange[0] > newPriceRange[1]) {
       newPriceRange.reverse();
     }
-    setPriceRange(newPriceRange);
+    debouncedSetPriceRange(newPriceRange);
   };
 
   const clearFilters = () => {
-    setSearchTerm('');
+    setSearchTermState('');
     setSelectedCategory(null);
-    setPriceRange([0, 10]);
+    // Reset price range to max/min of current products
+    if (products.length > 0) {
+      const prices = products.map(p => p.price);
+      setPriceRangeState([Math.min(...prices), Math.max(...prices)]);
+    } else {
+      setPriceRangeState([0, 100]); // Fallback if no products
+    }
   };
   // ...
   if (isLoading) {
@@ -111,8 +189,8 @@ const ShopPage: React.FC = () => {
               <div className="relative">
                 <input
                   type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  value={searchTerm} // Use searchTerm for controlled input
+                  onChange={(e) => debouncedSetSearchTerm(e.target.value)}
                   placeholder="Search products..."
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
@@ -153,28 +231,28 @@ const ShopPage: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span>
-                    {formatCurrency(priceRange[0], currency, exchangeRate)}
+                    {formatCurrency(priceRangeState[0], currency, exchangeRate)}
                   </span>
                   <span>
-                    {formatCurrency(priceRange[1], currency, exchangeRate)}
+                    {formatCurrency(priceRangeState[1], currency, exchangeRate)}
                   </span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <input
                     type="range"
                     min="0"
-                    max="10"
+                    max={maxProductPrice} // Use dynamic max
                     step="0.5"
-                    value={priceRange[0]}
+                    value={priceRangeState[0]} // Use priceRangeState
                     onChange={(e) => handlePriceChange(e, 0)}
                     className="w-full"
                   />
                   <input
                     type="range"
                     min="0"
-                    max="10"
+                    max={maxProductPrice} // Use dynamic max
                     step="0.5"
-                    value={priceRange[1]}
+                    value={priceRangeState[1]} // Use priceRangeState
                     onChange={(e) => handlePriceChange(e, 1)}
                     className="w-full"
                   />

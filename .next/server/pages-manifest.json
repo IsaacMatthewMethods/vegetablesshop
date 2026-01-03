@@ -1,5 +1,12 @@
 {
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js"
+  "/_document": "pages/_document.js",
+  "/product/[id]": "pages/product/[id].js",
+  "/admin": "pages/admin.js",
+  "/api/all-orders": "pages/api/all-orders.js",
+  "/admin/users": "pages/admin/users.js",
+  "/api/users": "pages/api/users.js",
+  "/admin/products": "pages/admin/products.js",
+  "/dashboard": "pages/dashboard.js"
 }
